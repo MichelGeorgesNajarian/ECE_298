@@ -1,0 +1,26 @@
+#include <msp430.h>
+#include <msp430fr4133.h>
+
+
+
+/**
+ * main.c
+ */
+int main(void)
+{
+    WDTCTL = WDTPW | WDTHOLD;   // stop watchdog timer
+
+    P1OUT &= 0x00; // setting output to 0
+    P1DIR &= 0x00;
+    P1DIR |= BIT4; // sensor trig as output
+    //P1DIR &= ~BIT4; // sensor echo as input
+
+
+    while (1){ //infinite loop
+        P1OUT |= BIT4; //p1.4 is high for 10 microseconds (trigger pulse)
+        __delay_cycles(10*10/17);
+        P1OUT &= ~BIT4;
+        __delay_cycles(50*10/17);
+    }
+    return 0;
+}
